@@ -112,6 +112,11 @@
                 <exclude name="**/.svn"/>
             </fileset>
         </copy>
+        <copy todir="${deploy.dir}/var" overwrite="yes" verbose="yes">
+            <fileset dir="var">
+                <exclude name="**/.svn"/>
+            </fileset>
+        </copy>
     </target>
     <target name="symlink">
         <symlink overwrite="yes" failonerror="no" link="${deploy.dir}/app/code/community/Mage" resource="${basedir}/src/app/code/community/Mage" />
@@ -121,6 +126,8 @@
         <symlink overwrite="yes" failonerror="no" link="${deploy.dir}/lib/Ibuildings" resource="${basedir}/src/lib/Ibuildings" />
         <mkdir dir="${deploy.dir}/tests/app/code/"/>
         <symlink overwrite="yes" failonerror="no" link="${deploy.dir}/tests/app/code/core" resource="${basedir}/src/tests/app/code/core" />
+        <mkdir dir="${deploy.dir}/var/connect"/>
+        <symlink failonerror="no" link="${deploy.dir}/var/connect/MageTest.xml" resource="${basedir}/var/connect/MageTest.xml" />
     </target>
     <target name="remove">
         <delete file="${deploy.dir}/app/code/community/Mage"/>
@@ -128,6 +135,9 @@
         <delete file="${deploy.dir}/app/etc/modules/Ibuildings_MageTest.xml"/>
         <delete file="${deploy.dir}/lib/Ibuildings"/>
         <delete file="${deploy.dir}/tests/app/code/core"/>
+        <delete file="${deploy.dir}/tests/phpunit.xml"/>
+        <delete file="${deploy.dir}/tests/bootstrap.php"/>
+        <delete file="${deploy.dir}/var/connect/MageTest.xml"/>
     </target>
     <!-- Default build task -->
     <target name="build" depends="clean,parallelTasks,phpunit,phpcb"/>

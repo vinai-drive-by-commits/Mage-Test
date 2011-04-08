@@ -142,6 +142,7 @@ abstract class Ibuildings_Mage_Test_PHPUnit_ControllerTestCase
      */
     protected function setUp()
     {
+        self::flushCache();
         // Boostrap Magento with testing objects
         $this->mageBootstrap();
     }
@@ -188,11 +189,6 @@ abstract class Ibuildings_Mage_Test_PHPUnit_ControllerTestCase
         Mage::app($this->mageRunCode, $this->mageRunType, $this->options);
         Mage::app()->setRequest(new Ibuildings_Mage_Controller_Request_HttpTestCase);
         Mage::app()->setResponse(new Ibuildings_Mage_Controller_Response_HttpTestCase);
-        
-        // Rewrite the core classes at runtime to prevent emails from being sent
-        // Mage::getConfig()->setNode('global/models/core/rewrite/email_template', 'Ibuildings_Test_Model_Email_Template');
-        // // This is a hack to get the runtime config changes to take effect
-        // Mage::getModel('core/email_template');
     }
 
     /**
@@ -425,11 +421,22 @@ abstract class Ibuildings_Mage_Test_PHPUnit_ControllerTestCase
      * @return void
      * @author Alistair Stead
      **/
-    public static function enableCache()
+    public static function enableCache($types = null)
     {
+        if (is_null($types)) {
+            $ypes = array(
+                'config',
+                'layout',
+                'block_html',
+                'translate',
+                'collections',
+                'eav',
+                'config_api'
+            );
+        }
         $allTypes = Mage::app()->useCache();
         $cacheTypes = array();
-        foreach (Mage::app()->getCacheInstance()->getTypes() as $type) {
+        foreach ($types as $type) {
             $cacheTypes[] = $type->getId();
         }
 
@@ -451,21 +458,32 @@ abstract class Ibuildings_Mage_Test_PHPUnit_ControllerTestCase
      * @return void
      * @author Alistair Stead
      **/
-    public static function disableCache()
+    public static function disableCache($types = null)
     {
+        if (is_null($types)) {
+            $ypes = array(
+                'config',
+                'layout',
+                'block_html',
+                'translate',
+                'collections',
+                'eav',
+                'config_api'
+            );
+        }
         $allTypes = Mage::app()->useCache();
         $cacheTypes = array();
-        foreach (Mage::app()->getCacheInstance()->getTypes() as $type) {
+        foreach ($types as $type) {
             $cacheTypes[] = $type->getId();
         }
 
         $updatedTypes = 0;
-        foreach ($cacheTypes as $code) {
+        foreach ($cacheTypes as $type) {
             if (!empty($allTypes[$code])) {
                 $allTypes[$code] = 0;
                 $updatedTypes++;
             }
-            $tags = Mage::app()->getCacheInstance()->cleanType($code);
+            $tags = Mage::app()->getCacheInstance()->cleanType($type);
         }
         if ($updatedTypes > 0) {
             Mage::app()->saveUseCache($allTypes);
@@ -478,9 +496,36 @@ abstract class Ibuildings_Mage_Test_PHPUnit_ControllerTestCase
      * @return void
      * @author Alistair Stead
      **/
-    public static function cleanCache()
+    public static function cleanCache($types = null)
     {
-        Mage::app()->getCacheInstance()->clean(array());
+        if (is_null($types)) {
+            $types = array(
+                'config',
+                'layout',
+                'block_html',
+                'translate',
+                'collections',
+                'eav',
+                'config_api'
+            );
+        }
+        
+        if (!empty($types)) {
+            foreach ($types as $type) {
+                $tags = Mage::app()->getCacheInstance()->cleanType($type);
+            }
+        }
+    }
+    
+    /**
+     * Entirely flush the cache within the system
+     *
+     * @return void
+     * @author Alistair Stead
+     **/
+    public static function flushCache()
+    {
+        Mage::app()->getCacheInstance()->flush();
     }
     
     /**
