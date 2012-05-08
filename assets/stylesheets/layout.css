@@ -17,7 +17,7 @@
 /* #Site Styles
 ================================================== */
 body {
-    background: url('/assets/images/white_sand.png') #EDEDED;
+    background: url('../images/white_sand.png') #EDEDED;
     color: #484444;
 }
 
@@ -78,7 +78,7 @@ a, a:visited {
 
 ul li {
     padding-left: 20px;
-    list-style: url('/assets/images/star.png') inside;
+    list-style: url('../images/star.png') inside;
 }
 
 nav ol {
@@ -147,7 +147,7 @@ nav ol li a, nav ol a:visited {
 
 .download::before {
     background-color:#2591b4;
-    background-image:url('/assets/images/download.png');
+    background-image:url('../images/download.png');
     background-repeat:no-repeat;
     background-position:center center;
     content:"";
