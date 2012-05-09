@@ -44,9 +44,20 @@ Using git we clone the GitHub repo into our extensions directory and it will dow
 
 ### Install Mage-Test using modman
 
+With Mage-Test downloaded, we can use Modman to install it for us. Modman will create a bunch of symlinks to the correct places in our Magento installation.
+From the Magento root directory, we can intialise Modman and then tell it create links to the Mage-Test module:
+
     cd ../public
     modman init
     modman link /absolute/path/to/extensions/Mage-Test
+
+Alternately, you can use Modman to both download AND install Mage-Test:
+
+	cd ../public
+	modman init
+	modman clone git://github.com/alistairstead/Mage-Test.git
+
+That will download Mage-Test to `public/.modman/Mage-Test` and then create the necessary symlinks in Magento to install it.
 
 ### Setup PHPUnit
 
